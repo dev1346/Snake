@@ -1,0 +1,15 @@
+
+.menu {
+  border: 1px solid black;
+  display: flex; 
+  justify-content: space-evenly;
+  }
+
+  .graph{
+    display:flex; 
+    justify-content:center; 
+    align-items:center; 
+    height:100vh;
+    background-color: white;
+  }
+  
