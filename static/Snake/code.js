@@ -7,7 +7,8 @@ var appConfig = {
 var envConfig = {
 		colorDay: "lightgreen",
 		colorNight: "black",
-		timeDayNight: 20000,
+		activityDayNight: 1.3,
+		timeDayNight: 60000,
 		timeStep: 100,
 		time: 0
 	}
@@ -44,13 +45,15 @@ function init() {
 
 	var targets = [];
 	var snakes = [];
+
+
+
 	var canvas = d3.select("body").append("svg").attr("width",appConfig.width).attr("height",appConfig.height)
 				.style("background",envConfig.colorDay)
 				.on("touchstart",touchHandle).on("mouseup",mouseHandle)
 	var info = canvas.append("text")
 				.attr("class","info")
 				.attr("x",10).attr("y",appConfig.infoHeight).attr("font-size",appConfig.infoHeight*0.8)
-
 
 	setInterval(()=>{
 		snakes = updateSnakesModel(snakes,targets);
@@ -60,7 +63,8 @@ function init() {
 		renderTargets(canvas,targets);
 
 		envConfig.time += envConfig.timeStep;
-		canvas.style("background",scaleDayNightLight(Math.sin(envConfig.time/envConfig.timeDayNight)))
+		canvas.style("background",scaleDayNightLight(Math.sin(envConfig.time/envConfig.timeDayNight*Math.PI*2)))
+		// info.text(`${envConfig.time/1000} s`)
 		},envConfig.timeStep);
 
 	setInterval(()=>{
@@ -75,11 +79,15 @@ function init() {
 	function mouseHandle(){
 		d3.event.preventDefault();
 		d3.event.stopPropagation();
-		var d = d3.mouse(this)
 		if(snakes.length==0){
-			addToSnakes(snakes,event.clientX,event.clientY);
+			addToSnakes(snakes,d3.event.clientX,d3.event.clientY);
 		} else {
-			addToTargets(targets,event.clientX,event.clientY);
+			addToTargets(targets,d3.event.clientX,d3.event.clientY);
+			if(d3.event.shiftKey){
+				for(let i=0;i<10;i++){
+					addToTargets(targets,Math.floor(Math.random()*appConfig.width),Math.floor(Math.random()*appConfig.height));
+				}
+			}
 		}
 	}
 	function touchHandle(){
@@ -102,8 +110,7 @@ function snakeInfo(l){
 }
 
 function activity(){
-
-	return(scaleDayNightActivity(Math.sin(envConfig.time/envConfig.timeDayNight)))
+	return(scaleDayNightActivity(Math.sin(envConfig.time/envConfig.timeDayNight*Math.PI*2)))
 }
 
 //******************************************************* Scales
@@ -114,7 +121,7 @@ var scaleAgeColorHeadMale = d3.scaleLinear().domain([0,snakeConfig.maxAge]).rang
 var scaleAgeColorHeadFemale = d3.scaleLinear().domain([0,snakeConfig.maxAge]).range(["white","red"]);
 var scaleAgeColorBody = d3.scaleLinear().domain([0,snakeConfig.maxAge]).range(["yellow","darkgray"]);
 var scaleDayNightLight = d3.scaleLinear().domain([-1,1]).range([envConfig.colorNight,envConfig.colorDay]);
-var scaleDayNightActivity = d3.scaleLinear().domain([-1,1]).range([0,1]);
+var scaleDayNightActivity = d3.scaleLinear().domain([-1,1]).range([0,envConfig.activityDayNight]);
 
 //******************************************************************************* SNAKE
 
@@ -225,9 +232,9 @@ function updateSnakesModel(ss,ts){
 			if((s.heading.dx==0) && (s.heading.dy==0)){
 				if(s.gender){
 					ss.forEach((male)=>{
-								if((!male.gender)&&(male.mature)){
-									s.heading = headingSnakeAwaySnake(male,s)
-								}				
+						if((!male.gender)&&(male.mature)){
+							s.heading = headingSnakeAwaySnake(male,s)
+						}				
 					})
 				} else {
 					if(s.mature){
