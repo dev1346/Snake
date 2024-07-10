@@ -79,7 +79,7 @@ function init() {
 	function mouseHandle(){
 		d3.event.preventDefault();
 		d3.event.stopPropagation();
-		if(snakes.length==0){
+		if(snakes.length==0 || d3.event.altKey){
 			addToSnakes(snakes,d3.event.clientX,d3.event.clientY);
 		} else {
 			addToTargets(targets,d3.event.clientX,d3.event.clientY);
