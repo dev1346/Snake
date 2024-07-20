@@ -1,3 +1,0 @@
-GPT server at port 443
-InsightFace server at port 8001
-RAG server at port 8006

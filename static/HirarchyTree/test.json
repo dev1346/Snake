@@ -1,9 +1,0 @@
-[
-    {"name":"Madar","imports":["Bahram","Roya"],"strength":[100,100]},
-    {"name":"Pedar","imports":["Bahram","Roya"],"strength":[100,100]},
-    {"name":"Roya","imports":["Parviz","Shirin","Bahram"],"strength":[100,100,50]},
-    {"name":"Bahram","imports":["Bahareh","Roya"],"strength":[100,50]},
-    {"name":"Shirin","imports":["Bahareh"],"strength":[0]},
-    {"name":"Parviz","imports":["Bahareh"],"strength":[0]},
-    {"name":"Bahareh","imports":["Bahareh"],"strength":[10]}
-]
